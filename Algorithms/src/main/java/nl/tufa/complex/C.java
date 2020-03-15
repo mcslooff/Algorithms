@@ -51,8 +51,8 @@ public class C {
 	private final double z;
 
 	public C(double alpha, double z) throws ArithmeticException {
-		//if (z == 0)
-		//	throw new ArithmeticException("Zero length vectors cannot be instantiated.");
+		// if (z == 0)
+		// throw new ArithmeticException("Zero length vectors cannot be instantiated.");
 		double a = (z < 0 ? Math.PI : 0) + alpha;
 		a = (a > Math.PI * 2 ? a - (Math.floor(a / (2 * Math.PI)) * 2 * Math.PI) : a);
 		a = (a < 0 ? Math.PI * 2 : 0) + a;
@@ -92,7 +92,7 @@ public class C {
 	}
 
 	public C add(C c) {
-		
+
 		// Cosine rule c^2 = a^2 - b^2 + 2*a*b*cos(a)
 		// Determine relative angles between vectors:
 		// a'= a
@@ -102,30 +102,31 @@ public class C {
 		// sin(a)/a = sin(b)/b -> sin(b)=(sin(a)*b)/a
 		// b = sin-1((sin(a)*b)/a)
 		// c = b+a
-		
+
 		double gamma = this.alpha + Math.PI - c.getAlpha();
-		
-		double l = Math.sqrt(Math.pow(this.z, 2) + Math.pow(c.getZ(), 2) - 2*this.z*c.getZ()*Math.cos(gamma));
-		
+
+		double l = Math.sqrt(Math.pow(this.z, 2) + Math.pow(c.getZ(), 2) - 2 * this.z * c.getZ() * Math.cos(gamma));
+
 		double lambda = 0;
-		if(l==0) {
-			// Assume the result vector could be zero length but the two vectors to be summed are not.
-			double betta = Math.asin(c.getZ()*Math.sin(gamma)/this.z);
+		if (l == 0) {
+			// Assume the result vector could be zero length but the two vectors to be
+			// summed are not.
+			double betta = Math.asin(c.getZ() * Math.sin(gamma) / this.z);
 			// Triangle in Euclidian space has sum of angles equal to pi.
-			lambda = Math.PI-betta-gamma;
+			lambda = Math.PI - betta - gamma;
 		} else {
-			lambda = Math.asin(c.getZ()*Math.sin(gamma)/l);
+			lambda = Math.asin(c.getZ() * Math.sin(gamma) / l);
 		}
-		double delta = this.alpha+lambda;
-		
+		double delta = this.alpha + lambda;
+
 		return new C(delta, l);
-		
+
 	}
 
 	public C sub(C c) {
 		// Use addition by inverting direction of vector c.
 		return this.add(c.inverse());
-		//return fromCartesian(this.getRe() - c.getRe(), this.getIm() - c.getIm());
+		// return fromCartesian(this.getRe() - c.getRe(), this.getIm() - c.getIm());
 	}
 
 	public C mul(C c) {
@@ -157,19 +158,25 @@ public class C {
 
 	/**
 	 * 
-	 * @return conjugate <code>c<sup>*</sup></code> of c (x + yi) where <code>c<sup>*</sup> = x - yi</code>.
+	 * @return conjugate <code>c<sup>*</sup></code> of c (x + yi) where
+	 *         <code>c<sup>*</sup> = x - yi</code>.
 	 */
 	public C conjugate() {
 		return new C(-this.alpha, this.z);
 	}
-	
+
 	public C inverse() {
 		return new C(this.alpha + Math.PI, this.z);
 	}
-	
+
 	@Override
 	public String toString() {
-		return z + "\u00d7e^(" + alpha/Math.PI + "\u00d7\u03c0\u00d7i)";
+		return z + "\u00d7e^(" + alpha / Math.PI + "\u00d7\u03c0\u00d7i)";
+	}
+
+	@Override
+	public C clone() {
+		return new C(this.alpha, this.z);
 	}
 
 	@Override
@@ -199,5 +206,5 @@ public class C {
 			return false;
 		return true;
 	}
-	
+
 }

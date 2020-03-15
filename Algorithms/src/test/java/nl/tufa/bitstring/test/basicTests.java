@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import junit.framework.Assert;
 import nl.tufa.bitstring.BitString;
+import nl.tufa.bitstring.IncompatibleBitStringException;
 
 @SuppressWarnings("deprecation")
 public class basicTests {
@@ -72,4 +73,77 @@ public class basicTests {
 		Assert.assertEquals(false, b.get(14));
 		
 	}
+	
+	@Test 
+	public void basicTest_6() throws IncompatibleBitStringException {
+		
+		BitString a = BitString.valueOf("000000000000");
+		BitString b = BitString.valueOf("000000000010");
+		
+		Assert.assertEquals("000000000000", a.toString());
+		Assert.assertEquals("000000000010", b.toString());
+		
+		BitString c = a.and(b);
+		Assert.assertEquals("000000000000", c.toString());
+		
+		a = BitString.valueOf("010000000010");
+		
+		c = a.and(b);
+		Assert.assertEquals("000000000010", c.toString());
+		
+	}
+	
+	@Test 
+	public void basicTest_7() throws IncompatibleBitStringException {
+		
+		BitString a = BitString.valueOf("000000000000");
+		BitString b = BitString.valueOf("000000000010");
+		
+		BitString c = a.or(b);
+		Assert.assertEquals("000000000010", c.toString());
+		
+		a = BitString.valueOf("010000000010");
+		
+		c = a.or(b);
+		Assert.assertEquals("010000000010", c.toString());
+		
+	}
+	
+	@Test 
+	public void basicTest_8() throws IncompatibleBitStringException {
+		
+		BitString a = BitString.valueOf("000000000000");
+		
+		BitString c = a.not();
+		Assert.assertEquals("111111111111", c.toString());
+		
+		a = BitString.valueOf("010000000010");
+		
+		c = a.not();
+		Assert.assertEquals("101111111101", c.toString());
+		
+	}
+
+	@Test 
+	public void basicTest_9() throws IncompatibleBitStringException {
+		
+		BitString a = BitString.valueOf("000000000101");
+		BitString b = BitString.valueOf("000000000110");
+		
+		BitString c = a.xor(b);
+		Assert.assertEquals("000000000011", c.toString());
+		
+	}
+
+	@Test 
+	public void basicTest_A() throws IncompatibleBitStringException {
+		
+		BitString a = BitString.valueOf("000000000101");
+		BitString b = BitString.valueOf("000000000110");
+		
+		BitString c = a.xnor(b);
+		Assert.assertEquals("111111111100", c.toString());
+		
+	}
+	
 }

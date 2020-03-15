@@ -52,7 +52,7 @@ copies or substantial portions of the Software.
  */
 public class BitString {
 
-	private final byte[] bits;
+	protected final byte[] bits;
 	private final int length;
 
 	public BitString(int length) {
@@ -125,10 +125,11 @@ public class BitString {
 	public BitString and(BitString b) throws IncompatibleBitStringException {
 		if (length != b.length())
 			throw new IncompatibleBitStringException();
-
+		
 		BitString r = new BitString(length);
-		for (int i = 0; i < length; i++) {
-			r.set(i, this.get(i) && b.get(i));
+		
+		for(int i=0; i<bits.length; i++) {
+			r.bits[i] = (byte) (b.bits[i] & this.bits[i]);
 		}
 
 		return r;
@@ -139,18 +140,20 @@ public class BitString {
 			throw new IncompatibleBitStringException();
 
 		BitString r = new BitString(length);
-		for (int i = 0; i < length; i++) {
-			r.set(i, this.get(i) || b.get(i));
+		
+		for(int i=0; i<bits.length; i++) {
+			r.bits[i] = (byte) (b.bits[i] | this.bits[i]);
 		}
-
+		
 		return r;
 	}
 
 	public BitString not() {
 
 		BitString r = new BitString(length);
-		for (int i = 0; i < length; i++) {
-			r.set(i, !this.get(i));
+		
+		for(int i=0; i<bits.length; i++) {
+			r.bits[i] = (byte) (255-this.bits[i]);
 		}
 
 		return r;
@@ -159,24 +162,16 @@ public class BitString {
 	public BitString xor(BitString b) throws IncompatibleBitStringException {
 		if (length != b.length())
 			throw new IncompatibleBitStringException();
-
-		BitString r = new BitString(length);
-		for (int i = 0; i < length; i++) {
-			r.set(i, this.get(i) != b.get(i));
-		}
-
-		return r;
+		
+		return this.xnor(b).not();
 	}
 
 	public BitString xnor(BitString b) throws IncompatibleBitStringException {
 		if (length != b.length())
 			throw new IncompatibleBitStringException();
 
-		BitString r = new BitString(length);
-		for (int i = 0; i < length; i++) {
-			r.set(i, this.get(i) == b.get(i));
-		}
-
+		BitString r = this.and(b).or(this.not().and(b.not()));
+		
 		return r;
 	}
 
@@ -187,5 +182,15 @@ public class BitString {
 			s += this.get(i) ? "1" : "0";
 		}
 		return s;
+	}
+	
+	public static BitString valueOf(String value) {
+		
+		BitString b = new BitString(value.length());
+		int l = value.length();
+		for(int i=0; i<l; i++) {
+			b.set(l-i-1, value.substring(i,i+1).equals("1"));
+		}
+		return b;
 	}
 }

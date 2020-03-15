@@ -91,27 +91,27 @@ public class Ket implements CVector {
 	}
 
 	public Ket mul(C c) {
-		
+
 		Ket k = new Ket(this.c.length);
-		
+
 		for (int i = 0; i < this.c.length; i++) {
 			k.set(i, this.c[i].mul(c));
 		}
-		
+
 		return k;
 	}
 
 	public Ket div(C c) {
-		
+
 		Ket k = new Ket(this.c.length);
-		
+
 		for (int i = 0; i < this.c.length; i++) {
 			k.set(i, this.c[i].div(c));
 		}
-		
+
 		return k;
 	}
-	
+
 	public Ket add(Ket v) throws IncompatibleVectorException {
 		if (c.length != v.size())
 			throw new IncompatibleVectorException();
@@ -144,6 +144,18 @@ public class Ket implements CVector {
 			b.set(i, c[i].conjugate());
 		}
 		return b;
+	}
+
+	public Ket remove(int row) {
+		Ket k = new Ket(c.length-1);
+		int i = 0;
+		for (int r = 0; r < c.length; r++) {
+			if(r!=row) {
+				k.set(i, c[r]);
+				i++;
+			}
+		}
+		return k;
 	}
 
 	@Override
